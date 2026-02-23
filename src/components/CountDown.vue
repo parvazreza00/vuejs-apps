@@ -1,5 +1,12 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const goToHome = () => {
+  router.push("/");
+};
 
 const title = ref("");
 const location = ref("");
@@ -7,8 +14,7 @@ const targetDate = ref("");
 
 const isStarted = ref(false);
 const timeLeft = ref(0);
-const timer = null;
-const now = new Date().getTime();
+let timer = null;
 
 // Start countdown
 const startCountdown = () => {
@@ -48,6 +54,14 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <div class="mt-5 ml-5">
+    <button
+      @click="goToHome"
+      class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+    >
+      Back to Home
+    </button>
+  </div>
   <div class="container mt-10 text-center">
     <!-- form section -->
     <div
@@ -83,7 +97,7 @@ onUnmounted(() => {
     </div>
 
     <!-- countdown display -->
-    <div v-else class="mt-10">
+    <div v-else class="bg-gray-100 max-w-md mx-auto bg-gray-100 p-6 rounded-lg shadow">
       <h2 class="text-2xl font-bold mb-4">{{ title }}</h2>
       <p class="text-gray-600 mb-6">{{ location }}</p>
 
@@ -109,8 +123,16 @@ onUnmounted(() => {
         </div>
       </div>
       <div v-else class="text-2xl font-bold text-green-500">
-        Event Has Started!        
+        Event Has Started!
       </div>
+
+       <!-- Back to Home button -->
+      <button
+        @click="goToHome"
+        class="mt-6 px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+      >
+        Back to Home
+      </button>
     </div>
   </div>
 </template>
