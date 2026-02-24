@@ -27,8 +27,12 @@ const saveEvents = () => {
 
 // Create new event
 const createEvent = () => {
-  if (!title.value || !targetDate.value) {
-    errorMessage.value = "Title and Target Date are required!";
+  if (!title.value) {
+    errorMessage.value = "Title is required!";
+    return;
+  }
+  if (!targetDate.value) {
+    errorMessage.value = "Target Date is required!";
     return;
   }
 
@@ -113,9 +117,9 @@ const formatTime = (ms, type) => {
         type="datetime-local"
         class="w-full p-2 mb-4 border rounded"
       />
-      <p v-if="errorMessage" class="text-red-500 text-sm mt-2">
+      <span v-if="errorMessage" class="text-red-500 text-sm">
         {{ errorMessage }}
-      </p>
+      </span>
 
       <button
         @click="createEvent"

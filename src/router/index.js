@@ -3,6 +3,7 @@ import Counter from "../components/Counter.vue"
 import Home from "../components/Home.vue"
 import CountDown from "../components/CountDown.vue"
 import MultipleCountDown from "../components/MultipleCountDown.vue"
+import MultipleCountDown_2 from "../components/MultipleCountDown_2.vue"
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: "/multiple-countdown",
     name: "MultipleCountDown",
     component: MultipleCountDown
+  },
+  {
+    path: "/multiple-countdown-2",
+    name: "MultipleCountDown-2",
+    component: MultipleCountDown_2
   }
 
 ]

@@ -20,7 +20,7 @@
     </router-link>
 
     <router-link
-      to="/multiple-countdown"
+      to="/multiple-countdown-2"
       class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
     >
       Multiple CountDown Page
