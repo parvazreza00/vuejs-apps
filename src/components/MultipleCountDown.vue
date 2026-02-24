@@ -5,6 +5,8 @@ const title = ref("");
 const location = ref("");
 const targetDate = ref("");
 
+const errorMessage = ref("");
+
 const events = ref([]);
 let interval = null;
 
@@ -25,7 +27,10 @@ const saveEvents = () => {
 
 // Create new event
 const createEvent = () => {
-  if (!title.value || !targetDate.value) return;
+  if (!title.value || !targetDate.value) {
+    errorMessage.value = "Title and Target Date are required!";
+    return;
+  }
 
   events.value.push({
     id: Date.now(),
@@ -40,6 +45,7 @@ const createEvent = () => {
   title.value = "";
   location.value = "";
   targetDate.value = "";
+  errorMessage.value = "";
 };
 
 // Delete event
@@ -91,6 +97,9 @@ const formatTime = (ms, type) => {
         placeholder="Event Title"
         class="w-full p-2 mb-3 border rounded"
       />
+      <p v-if="errorMessage" class="text-red-500 text-sm mt-2">
+        {{ errorMessage }}
+      </p>
 
       <input
         v-model="location"
@@ -104,6 +113,9 @@ const formatTime = (ms, type) => {
         type="datetime-local"
         class="w-full p-2 mb-4 border rounded"
       />
+      <p v-if="errorMessage" class="text-red-500 text-sm mt-2">
+        {{ errorMessage }}
+      </p>
 
       <button
         @click="createEvent"
