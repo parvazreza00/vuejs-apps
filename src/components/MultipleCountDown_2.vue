@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, reactive, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -12,8 +12,9 @@ const title = ref("");
 const location = ref("");
 const targetDate = ref("");
 
-const errors = ref({
+const errors = reactive({
   title: "",
+  location: "",
   targetDate: "",
 });
 
@@ -27,7 +28,6 @@ onMounted(() => {
   }
 
   GlobalTimer();
-
 });
 
 const saveEvents = () => {
@@ -35,19 +35,27 @@ const saveEvents = () => {
 };
 
 const createEvent = () => {
-  errors.value.title = "";
-  errors.value.targetDate = "";
+  errors.title = "";
+  errors.location = "";
+  errors.targetDate = "";
 
   if (!title.value) {
-    errors.title.value = "Title is required!";
-  
+    errors.title = "Title is required!";
+  } else if (!/^[A-Za-z\s]+$/.test(title.value)) {
+    errors.title = "Title must contain only English letters!";
   }
+
+  if (!location.value) {
+    errors.location = "location is required!";
+  } else if (!/^[A-Za-z0-9\s]+$/.test(location.value)) {
+    errors.location = "Location must contain only letters and numbers!";
+  }
+
   if (!targetDate.value) {
-    errors.targetDate.value = "Target Date is required!";
-  
+    errors.targetDate = "Target Date is required!";
   }
-  
-   if (errors.value.title || errors.value.targetDate) return;
+
+  if (errors.title || errors.location || errors.targetDate) return;
 
   events.value.push({
     id: Date.now(),
@@ -85,7 +93,7 @@ const GlobalTimer = () => {
 };
 
 onUnmounted(() => {
-  clearInterval(interval);
+  clearInterval(interval);0
 });
 
 // Format time
@@ -97,7 +105,6 @@ const formatTime = (ms, type) => {
   if (type === "minutes") return Math.floor((ms / (1000 * 60)) % 60);
   if (type === "seconds") return Math.floor((ms / 1000) % 60);
 };
-
 </script>
 
 <template>
@@ -112,9 +119,8 @@ const formatTime = (ms, type) => {
     </div> -->
 
     <div>
-
-      <span v-if="errorMessage" class="text-red-500 text-sm">
-        {{ errorMessage }}  
+      <span v-if="errors.title" class="text-red-500 text-sm">
+        {{ errors.title }}
       </span>
       <input
         v-model="title"
@@ -122,8 +128,10 @@ const formatTime = (ms, type) => {
         placeholder="Event Title"
         class="w-full p-2 mb-3 border rounded"
       />
-      
 
+      <span v-if="errors.location" class="text-red-500 text-sm">
+        {{ errors.location }}
+      </span>
       <input
         v-model="location"
         type="text"
@@ -131,19 +139,21 @@ const formatTime = (ms, type) => {
         class="w-full p-2 mb-3 border rounded"
       />
 
-       <span v-if="errorMessage" class="text-red-500 text-sm">
-        {{ errorMessage }}  
+      <span v-if="errors.targetDate" class="text-red-500 text-sm">
+        {{ errors.targetDate }}
       </span>
       <input
-        v-model="targetDate"  
-          type="datetime-local"
-          class="w-full p-2 mb-4 border rounded"
+        v-model="targetDate"
+        type="datetime-local"
+        class="w-full p-2 mb-4 border rounded"
       />
-     
+
       <button
         @click="createEvent"
-        class="w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600"  
-      >Create Event</button>
+        class="w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        Create Event
+      </button>
     </div>
 
     <div>
@@ -204,7 +214,6 @@ const formatTime = (ms, type) => {
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
