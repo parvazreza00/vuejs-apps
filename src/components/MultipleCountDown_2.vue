@@ -1,8 +1,10 @@
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
+import { useToast } from 'vue-toastification'
 
 const router = useRouter();
+const toast = useToast()
 
 const goToHome = () => {
   router.push("/");
@@ -26,7 +28,7 @@ onMounted(() => {
   if (save) {
     events.value = JSON.parse(save);
   }
-
+  
   GlobalTimer();
 });
 
@@ -63,7 +65,7 @@ const createEvent = () => {
     location: location.value,
     target: targetDate.value,
   });
-
+toast.info('Event created successfully');
   saveEvents();
 
   // reset form
