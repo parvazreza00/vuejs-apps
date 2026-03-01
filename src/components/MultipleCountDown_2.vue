@@ -1,10 +1,10 @@
 <script setup>
-import { ref, reactive, onMounted, onUnmounted } from "vue";
+import { ref, reactive, onMounted, onUnmounted, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useToast } from 'vue-toastification'
+import { useToast } from "vue-toastification";
 
 const router = useRouter();
-const toast = useToast()
+const toast = useToast();
 
 const goToHome = () => {
   router.push("/");
@@ -13,6 +13,8 @@ const goToHome = () => {
 const title = ref("");
 const location = ref("");
 const targetDate = ref("");
+
+const submitted = ref(false);
 
 const errors = reactive({
   title: "",
@@ -28,7 +30,7 @@ onMounted(() => {
   if (save) {
     events.value = JSON.parse(save);
   }
-  
+
   GlobalTimer();
 });
 
@@ -37,25 +39,12 @@ const saveEvents = () => {
 };
 
 const createEvent = () => {
-  errors.title = "";
-  errors.location = "";
-  errors.targetDate = "";
 
-  if (!title.value) {
-    errors.title = "Title is required!";
-  } else if (!/^[A-Za-z\s]+$/.test(title.value)) {
-    errors.title = "Title must contain only English letters!";
-  }
+  submitted.value = true;
 
-  if (!location.value) {
-    errors.location = "location is required!";
-  } else if (!/^[A-Za-z0-9\s]+$/.test(location.value)) {
-    errors.location = "Location must contain only letters and numbers!";
-  }
-
-  if (!targetDate.value) {
-    errors.targetDate = "Target Date is required!";
-  }
+  validateTitle();
+  validateLocation();
+  validateDate();
 
   if (errors.title || errors.location || errors.targetDate) return;
 
@@ -65,15 +54,57 @@ const createEvent = () => {
     location: location.value,
     target: targetDate.value,
   });
-toast.info('Event created successfully');
+  toast.info("Event created successfully");
   saveEvents();
 
   // reset form
   title.value = "";
   location.value = "";
-  targetDate.value = "";
-  errorMessage.value = "";
+  targetDate.value = "";  
 };
+
+// validation message here
+const validateTitle = () => {
+  if(!title.value){
+    errors.title = "Title is required";
+  }else if(!/^[A-Za-z\s]+$/.test(title.value)){
+    errors.title = "Title must contain only English letters!";
+  }else{
+    errors.title = "";
+  }
+}
+const validateLocation = () => {
+  if(!location.value){
+    errors.location = "Location is required!";
+  }else if(!/^[A-Za-z0-9\s]+$/.test(location.value)){
+    errors.location = "Location must contain Letters and characters!";
+  }else{
+    errors.location="";    
+  }
+}
+const validateDate = () => {
+  if(!targetDate.value){
+    errors.targetDate = "Date is required!";
+  }else{
+    errors.targetDate = "";
+  }
+}
+
+watch(title, ()=>{
+  if(submitted.value || errors.title){
+    validateTitle();
+  }
+})
+watch(location, ()=>{
+  if(submitted.value || errors.location){
+    validateLocation();
+  }
+})
+watch(targetDate, ()=>{
+  if(submitted.value || errors.targetDate){
+    validateDate();
+  }
+})
 
 const deleteEvent = (id) => {
   events.value = events.value.filter((event) => event.id !== id);
@@ -95,7 +126,8 @@ const GlobalTimer = () => {
 };
 
 onUnmounted(() => {
-  clearInterval(interval);0
+  clearInterval(interval);
+  0;
 });
 
 // Format time
