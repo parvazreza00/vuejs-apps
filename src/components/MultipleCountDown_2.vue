@@ -39,7 +39,6 @@ const saveEvents = () => {
 };
 
 const createEvent = () => {
-
   submitted.value = true;
 
   validateTitle();
@@ -60,51 +59,51 @@ const createEvent = () => {
   // reset form
   title.value = "";
   location.value = "";
-  targetDate.value = "";  
+  targetDate.value = "";
 };
 
 // validation message here
 const validateTitle = () => {
-  if(!title.value){
+  if (!title.value) {
     errors.title = "Title is required";
-  }else if(!/^[A-Za-z\s]+$/.test(title.value)){
+  } else if (!/^[A-Za-z\s]+$/.test(title.value)) {
     errors.title = "Title must contain only English letters!";
-  }else{
+  } else {
     errors.title = "";
   }
-}
+};
 const validateLocation = () => {
-  if(!location.value){
+  if (!location.value) {
     errors.location = "Location is required!";
-  }else if(!/^[A-Za-z0-9\s]+$/.test(location.value)){
+  } else if (!/^[A-Za-z0-9\s]+$/.test(location.value)) {
     errors.location = "Location must contain Letters and characters!";
-  }else{
-    errors.location="";    
+  } else {
+    errors.location = "";
   }
-}
+};
 const validateDate = () => {
-  if(!targetDate.value){
+  if (!targetDate.value) {
     errors.targetDate = "Date is required!";
-  }else{
+  } else {
     errors.targetDate = "";
   }
-}
+};
 
-watch(title, ()=>{
-  if(submitted.value || errors.title){
+watch(title, () => {
+  if (submitted.value || errors.title) {
     validateTitle();
   }
-})
-watch(location, ()=>{
-  if(submitted.value || errors.location){
+});
+watch(location, () => {
+  if (submitted.value || errors.location) {
     validateLocation();
   }
-})
-watch(targetDate, ()=>{
-  if(submitted.value || errors.targetDate){
+});
+watch(targetDate, () => {
+  if (submitted.value || errors.targetDate) {
     validateDate();
   }
-})
+});
 
 const deleteEvent = (id) => {
   events.value = events.value.filter((event) => event.id !== id);
@@ -143,15 +142,7 @@ const formatTime = (ms, type) => {
 
 <template>
   <div class="container mx-auto mt-5 grid grid-cols-2 gap-8 items-start">
-    <!-- <div>
-      <button
-        @click="goToHome"
-        class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-      >
-        Back to Home
-      </button>
-    </div> -->
-
+    
     <div>
       <span v-if="errors.title" class="text-red-500 text-sm">
         {{ errors.title }}
@@ -188,6 +179,15 @@ const formatTime = (ms, type) => {
       >
         Create Event
       </button>
+
+      <div class="mt-5">
+        <button
+          @click="goToHome"
+          class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+        >
+          Back to Home
+        </button>
+      </div>
     </div>
 
     <div>
